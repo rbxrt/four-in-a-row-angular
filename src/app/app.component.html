@@ -2,7 +2,9 @@
   <a class="mat-toolbar-icon" routerLink="/play">
     <img src="/assets/FourIcon.svg" alt="{{title}}" />
   </a>
-  <span class="vertical-spacer"></span>
+  <span class="active-player">
+    It's {{ activePlayer$ | async }} turn!
+  </span>
   <button mat-icon-button routerLink="/stats">
     <mat-icon>insights</mat-icon>
   </button>

@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Gameover!</h1>
 <div mat-dialog-content>
-    <p>Congratulations {{data.winner}}!</p>
+    <p>Congratulations {{(winner$ | async) }}!</p>
     <p>Do you want to play again?</p>
 
 </div>

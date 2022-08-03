@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
+import { reset, switchPlayer } from './activePlayer.action';
 
 export enum ColState {
   RED,
@@ -19,7 +21,7 @@ export class BoardService {
   public board: ColProps[][];
   public gameover: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  constructor() {
+  constructor(private store: Store) {
     this.board = this.createBoard();
   }
 
@@ -27,8 +29,8 @@ export class BoardService {
 
     const _board = new Array<ColProps[]>(7);
 
-    for (let colIndex = 0; colIndex < 12; colIndex++) {
-      let _col = new Array<ColProps>(9).fill({ state: ColState.EMPTY });
+    for (let colIndex = 0; colIndex < 7; colIndex++) {
+      let _col = new Array<ColProps>(6).fill({ state: ColState.EMPTY });
       _board[colIndex] = _col;
     }
 
@@ -39,32 +41,34 @@ export class BoardService {
   public initialize() {
     this.board = this.createBoard();
     this.gameover.next(false);
+    this.store.dispatch(reset());
 
     return this.board;
   }
 
-  public addToBoard(col: number, color: ColState.RED | ColState.YELLOW): boolean {
+  public addToBoard(col: number, color: ColState.RED | ColState.YELLOW) {
 
     let _col = this.board[col];
     let _lastEmptyPos = _col.findIndex(x => x.state === ColState.EMPTY);
 
     if (_lastEmptyPos > -1) {
       this.board[col][_lastEmptyPos] = { state: color };
-      this.checkForWinner();
-      return true;
-    }
+      let _gameIsOver = this.checkForWinner();
 
-    return false;
+      if(_gameIsOver) {
+        this.gameover.next(true);
+      } else {
+        this.store.dispatch(switchPlayer());
+      }
+    }
 
   }
 
-  private checkForWinner() {
+  private checkForWinner(): boolean {
 
     let _winnerFound = this.checkHorizontal() || this.checkVertical() || this.checkDiagonal();
 
-    if (_winnerFound) {
-      this.gameover.next(true);
-    }
+    return _winnerFound;
 
   }
 
@@ -73,9 +77,9 @@ export class BoardService {
     this.board.forEach(col => {
       let _matchCount = 1;
 
-      col.filter(e => e.state !== ColState.EMPTY).forEach((e, i, arr) => {
+      col.forEach((e, i, arr) => {
 
-        if (e.state === arr[i - 1]?.state) {
+        if (e.state !== ColState.EMPTY && e.state === arr[i - 1]?.state) {
           _matchCount++;
         } else {
           _matchCount = 1;
@@ -97,9 +101,9 @@ export class BoardService {
       let _row = this.board.flatMap(col => col[_rowIndex]);
       let _matchCount = 1;
 
-      _row.filter(e => e.state !== ColState.EMPTY).forEach((e, i, arr) => {
+      _row.forEach((e, i, arr) => {
 
-        if (e.state === arr[i - 1]?.state) {
+        if (e.state !== ColState.EMPTY && e.state === arr[i - 1]?.state) {
           _matchCount++;
         } else {
           _matchCount = 1;

@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { firstValueFrom, map, Observable, Subscription } from 'rxjs';
 import { GameoverComponent } from 'src/app/components/gameover/gameover.component';
+import { reset } from 'src/app/services/activePlayer.action';
 import { BoardService, ColProps, ColState } from 'src/app/services/board.service';
 
 
@@ -13,11 +15,10 @@ import { BoardService, ColProps, ColState } from 'src/app/services/board.service
 export class PlayComponent implements OnInit, OnDestroy {
 
   board: ColProps[][];
-  turn: number = 0;
   gameover: boolean = false;
   subscription: Subscription | undefined;
 
-  constructor(public dialog: MatDialog, private boardService: BoardService) {
+  constructor(public dialog: MatDialog, private boardService: BoardService, private store: Store<{ activePlayer: number }>) {
     this.board = boardService.board;
   }
 
@@ -27,7 +28,6 @@ export class PlayComponent implements OnInit, OnDestroy {
       if (r) this.openDialog()
     });
 
-    this.initTurnCounter();
   }
   ngOnDestroy(): void {
     if (this.subscription) {
@@ -35,15 +35,9 @@ export class PlayComponent implements OnInit, OnDestroy {
     }
   }
 
-  initTurnCounter() {
-    this.turn = this.board.flatMap(c => c).filter(c => c.state != ColState.EMPTY)?.length || 0;
-
-  }
 
   openDialog() {
-    let dialogRef = this.dialog.open(GameoverComponent, { data: { 
-      winner: this.turn % 2 === 0 ? "RED" : "YELLOW"}
-    });
+    let dialogRef = this.dialog.open(GameoverComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -67,21 +61,20 @@ export class PlayComponent implements OnInit, OnDestroy {
     }
   }
 
-  addToken(i: number) {
+  async addToken(i: number) {
 
     if (this.gameover) {
       return;
     }
 
-    let _addResult = this.boardService.addToBoard(i, this.turn % 2 === 0 ? ColState.RED : ColState.YELLOW);
+    let currentColor = await firstValueFrom(this.store.select('activePlayer'))
 
-    if (_addResult) {
-      this.turn++;
-    }
+    this.boardService.addToBoard(i, currentColor % 2 === 0 ? ColState.RED : ColState.YELLOW);
 
   }
 
   onReset() {
+    this.store.dispatch(reset());
     this.board = this.boardService.initialize()
   }
 

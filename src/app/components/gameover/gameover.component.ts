@@ -1,5 +1,7 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
+import { map, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-gameover',
@@ -8,9 +10,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class GameoverComponent {
 
+  winner$: Observable<string>;
+
   constructor(public dialogRef: MatDialogRef<GameoverComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { winner: string },
-  ) { }
+    private store: Store<{ activePlayer: number }>,
+  ) { 
+    this.winner$ = store.select('activePlayer').pipe(map(p => p % 2 === 0 ? "RED" : "YELLOW"));
+  }
 
   onCancelClick(): void {
     this.dialogRef.close(false);

@@ -1,5 +1,3 @@
-<p *ngIf="!gameover">It's {{turn % 2 === 0 ? "RED's" : "YELLOW's"}} turn!</p>
-
 <div class="board">
     <div class="col" *ngFor="let cols of board, index as i">
         <button type="button" class="item" [ngClass]="renderState(pos?.state)" *ngFor="let pos of cols, index as j" (click)="addToken(i)">
