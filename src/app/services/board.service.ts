@@ -27,8 +27,8 @@ export class BoardService {
 
     const _board = new Array<ColProps[]>(7);
 
-    for (let colIndex = 0; colIndex < 7; colIndex++) {
-      let _col = new Array<ColProps>(6).fill({ state: ColState.EMPTY });
+    for (let colIndex = 0; colIndex < 12; colIndex++) {
+      let _col = new Array<ColProps>(9).fill({ state: ColState.EMPTY });
       _board[colIndex] = _col;
     }
 
@@ -60,30 +60,107 @@ export class BoardService {
 
   private checkForWinner() {
 
-    let _winnerFound = false;
-
-
-    this.board.forEach(col => {
-      let _winnerCount = 1;
-
-      col.filter(e => e.state !== ColState.EMPTY).forEach((e, i, arr) => {
-
-        if (e.state === arr[i - 1]?.state) {
-          _winnerCount++;
-        } else {
-          _winnerCount = 1;
-        }
-      });
-
-      if (_winnerCount === 4) {
-        _winnerFound = true;
-      }
-
-    });
+    let _winnerFound = this.checkHorizontal() || this.checkVertical() || this.checkDiagonal();
 
     if (_winnerFound) {
       this.gameover.next(true);
     }
 
+  }
+
+  private checkVertical(): boolean {
+    let _gameIsOver = false;
+    this.board.forEach(col => {
+      let _matchCount = 1;
+
+      col.filter(e => e.state !== ColState.EMPTY).forEach((e, i, arr) => {
+
+        if (e.state === arr[i - 1]?.state) {
+          _matchCount++;
+        } else {
+          _matchCount = 1;
+        }
+      });
+
+      if (_matchCount === 4) {
+        _gameIsOver = true;
+      }
+
+    });
+
+    return _gameIsOver;
+  }
+  private checkHorizontal(): boolean {
+    let _gameIsOver = false;
+
+    for (let _rowIndex = 0; _rowIndex < this.board[0].length; _rowIndex++) {
+      let _row = this.board.flatMap(col => col[_rowIndex]);
+      let _matchCount = 1;
+
+      _row.filter(e => e.state !== ColState.EMPTY).forEach((e, i, arr) => {
+
+        if (e.state === arr[i - 1]?.state) {
+          _matchCount++;
+        } else {
+          _matchCount = 1;
+        }
+      });
+
+      if (_matchCount === 4) {
+        _gameIsOver = true;
+      }
+
+    }
+
+    return _gameIsOver;
+  }
+
+  private checkDiagonal(): boolean {
+    let _gameIsOver = false;
+
+    this.board.forEach((col, i, board) => {
+
+      col.filter(e => e.state !== ColState.EMPTY).forEach((e, j, currentCol) => {
+        
+        //from south east to north west
+        let _localIndex1 = i + 1;
+        let _localIndex2 = j + 1;
+        let _matchCount = 1;
+
+        while (_localIndex1 <= board.length || _localIndex2 <= currentCol.length) {
+          if (e.state === board[_localIndex1]?.[_localIndex2]?.state) {
+            _matchCount++;
+          }
+          _localIndex1++;
+          _localIndex2++;
+        }
+
+        if (_matchCount === 4) {
+          _gameIsOver = true;
+        }
+
+        //from north east to south west
+        _localIndex1 = i + 1;
+        _localIndex2 = j - 1;
+        _matchCount = 1;
+
+        while (!_gameIsOver && (_localIndex1 <= board.length || _localIndex2 >= 0)) {
+          if (e.state === board[_localIndex1]?.[_localIndex2]?.state) {
+            _matchCount++;
+          }
+          _localIndex1++;
+          _localIndex2--;
+        }
+
+        if (_matchCount === 4) {
+          _gameIsOver = true;
+        }
+
+      });
+
+
+    });
+
+    return _gameIsOver;
   }
 }
