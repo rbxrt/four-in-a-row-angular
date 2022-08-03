@@ -13,7 +13,7 @@ import { SettingsComponent } from './views/settings/settings.component';
 import { HomeComponent } from './views/home/home.component';
 
 import { GameoverComponent } from './components/gameover/gameover.component';
-import { activePlayerReducer } from './services/activePlayer.reducer';
+import { gameStateReducer } from './store/gameState.reducer';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,7 @@ import { activePlayerReducer } from './services/activePlayer.reducer';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    StoreModule.forRoot({ activePlayer: activePlayerReducer }, {}),
+    StoreModule.forRoot({ gameState: gameStateReducer }),
     BrowserAnimationsModule,
     MaterialModule
   ],

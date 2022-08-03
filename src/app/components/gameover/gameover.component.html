@@ -1,8 +1,8 @@
 <h1 mat-dialog-title>Gameover!</h1>
 <div mat-dialog-content>
-    <p>Congratulations {{(winner$ | async) }}!</p>
+    <p *ngIf="(tie$ | async) === false;else tie_content">Congratulations {{(winner$ | async) }}!</p>
     <p>Do you want to play again?</p>
-
+    <ng-template #tie_content>It's a tie...</ng-template>
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="onCancelClick()">No Thanks</button>

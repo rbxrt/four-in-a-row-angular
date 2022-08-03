@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject } from 'rxjs';
-import { reset, switchPlayer } from './activePlayer.action';
+import { firstValueFrom, map } from 'rxjs';
+import { AppState, selectPlayer } from '../store/store';
+import { resetGame, setGameover, switchPlayer } from './../store/gameState.action';
 
 export enum ColState {
   RED,
@@ -13,15 +14,15 @@ export interface ColProps {
   state: ColState;
 }
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class BoardService {
 
   public board: ColProps[][];
-  public gameover: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  constructor(private store: Store) {
+  constructor(private store: Store<AppState>) {
     this.board = this.createBoard();
   }
 
@@ -40,23 +41,29 @@ export class BoardService {
 
   public initialize() {
     this.board = this.createBoard();
-    this.gameover.next(false);
-    this.store.dispatch(reset());
+    this.store.dispatch(resetGame());
 
     return this.board;
   }
 
-  public addToBoard(col: number, color: ColState.RED | ColState.YELLOW) {
+  public async addToBoard(col: number) {
 
     let _col = this.board[col];
     let _lastEmptyPos = _col.findIndex(x => x.state === ColState.EMPTY);
+    let _currentColor = await firstValueFrom(this.store.select(selectPlayer).pipe(map(s => s === 0 ? ColState.RED : ColState.YELLOW)));
 
     if (_lastEmptyPos > -1) {
-      this.board[col][_lastEmptyPos] = { state: color };
-      let _gameIsOver = this.checkForWinner();
+      this.board[col][_lastEmptyPos] = { state: _currentColor };
+      let _gameHasWinner = this.checkForWinner();
+      let _gameHasDraw = this.checkForTie();
+      
+      if(_gameHasWinner || _gameHasDraw) {
+        
+        this.store.dispatch(setGameover({
+          gameover: _gameHasWinner || _gameHasDraw, 
+          tie: _gameHasDraw
+        }));
 
-      if(_gameIsOver) {
-        this.gameover.next(true);
       } else {
         this.store.dispatch(switchPlayer());
       }
@@ -65,11 +72,13 @@ export class BoardService {
   }
 
   private checkForWinner(): boolean {
-
     let _winnerFound = this.checkHorizontal() || this.checkVertical() || this.checkDiagonal();
-
     return _winnerFound;
+  }
 
+  private checkForTie(): boolean {
+    let _remainingEmpty = this.board.flatMap(c => c.filter(e => e.state === ColState.EMPTY)) || [];
+    return _remainingEmpty.length === 0;
   }
 
   private checkVertical(): boolean {
@@ -84,11 +93,12 @@ export class BoardService {
         } else {
           _matchCount = 1;
         }
-      });
 
-      if (_matchCount === 4) {
-        _gameIsOver = true;
-      }
+        if (_matchCount === 4) {
+          console.info("4 gewinnt vertikal!")
+          _gameIsOver = true;
+        }
+      });
 
     });
 
@@ -108,12 +118,12 @@ export class BoardService {
         } else {
           _matchCount = 1;
         }
+
+        if (_matchCount === 4) {
+          console.info("4 gewinnt horizontal!")
+          _gameIsOver = true;
+        }
       });
-
-      if (_matchCount === 4) {
-        _gameIsOver = true;
-      }
-
     }
 
     return _gameIsOver;
@@ -124,7 +134,7 @@ export class BoardService {
 
     this.board.forEach((col, i, board) => {
 
-      col.filter(e => e.state !== ColState.EMPTY).forEach((e, j, currentCol) => {
+      col.forEach((e, j, currentCol) => {
         
         //from south east to north west
         let _localIndex1 = i + 1;
@@ -132,15 +142,19 @@ export class BoardService {
         let _matchCount = 1;
 
         while (_localIndex1 <= board.length || _localIndex2 <= currentCol.length) {
-          if (e.state === board[_localIndex1]?.[_localIndex2]?.state) {
+          if (e.state !== ColState.EMPTY && e.state === board[_localIndex1]?.[_localIndex2]?.state) {
             _matchCount++;
+          } else {
+            _matchCount = 1;
+          }
+
+          if (_matchCount === 4) {
+            console.info("4 gewinnt diagonal (se->nw)!")
+            _gameIsOver = true;
+            break;
           }
           _localIndex1++;
           _localIndex2++;
-        }
-
-        if (_matchCount === 4) {
-          _gameIsOver = true;
         }
 
         //from north east to south west
@@ -149,19 +163,22 @@ export class BoardService {
         _matchCount = 1;
 
         while (!_gameIsOver && (_localIndex1 <= board.length || _localIndex2 >= 0)) {
-          if (e.state === board[_localIndex1]?.[_localIndex2]?.state) {
+          if (e.state !== ColState.EMPTY && e.state === board[_localIndex1]?.[_localIndex2]?.state) {
             _matchCount++;
+          } else {
+            _matchCount = 1;
+          }
+
+          if (_matchCount === 4) {
+            console.info("4 gewinnt diagonal (ne->sw)!")
+            _gameIsOver = true;
+            break;
           }
           _localIndex1++;
           _localIndex2--;
         }
 
-        if (_matchCount === 4) {
-          _gameIsOver = true;
-        }
-
       });
-
 
     });
 

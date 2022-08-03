@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { firstValueFrom, map, Observable, Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { GameoverComponent } from 'src/app/components/gameover/gameover.component';
-import { reset } from 'src/app/services/activePlayer.action';
 import { BoardService, ColProps, ColState } from 'src/app/services/board.service';
+import { resetGame } from 'src/app/store/gameState.action';
+import { AppState, selectGameover } from 'src/app/store/store';
 
 
 @Component({
@@ -15,17 +16,18 @@ import { BoardService, ColProps, ColState } from 'src/app/services/board.service
 export class PlayComponent implements OnInit, OnDestroy {
 
   board: ColProps[][];
-  gameover: boolean = false;
   subscription: Subscription | undefined;
 
-  constructor(public dialog: MatDialog, private boardService: BoardService, private store: Store<{ activePlayer: number }>) {
+  constructor(public dialog: MatDialog, private boardService: BoardService, private store: Store<AppState>) {
     this.board = boardService.board;
   }
 
   ngOnInit(): void {
-    this.subscription = this.boardService.gameover.subscribe(r => {
-      this.gameover = r;
-      if (r) this.openDialog()
+    this.subscription = this.store.select(selectGameover).subscribe(gameover => {
+
+      if (gameover) {
+        this.openDialog();
+      }
     });
 
   }
@@ -63,18 +65,15 @@ export class PlayComponent implements OnInit, OnDestroy {
 
   async addToken(i: number) {
 
-    if (this.gameover) {
+    if (await firstValueFrom(this.store.select(selectGameover))) {
       return;
     }
-
-    let currentColor = await firstValueFrom(this.store.select('activePlayer'))
-
-    this.boardService.addToBoard(i, currentColor % 2 === 0 ? ColState.RED : ColState.YELLOW);
-
+      this.boardService.addToBoard(i);
+    
   }
 
   onReset() {
-    this.store.dispatch(reset());
+    this.store.dispatch(resetGame());
     this.board = this.boardService.initialize()
   }
 
