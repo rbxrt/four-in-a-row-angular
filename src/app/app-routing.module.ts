@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { PlayComponent } from './play/play.component';
-import { SettingsComponent } from './settings/settings.component';
-import { StatsComponent } from './stats/stats.component';
+import { HomeComponent } from './views/home/home.component';
+import { PlayComponent } from './views/play/play.component';
+import { SettingsComponent } from './views/settings/settings.component';
+import { StatsComponent } from './views/stats/stats.component';
 
 const routes: Routes = [
   { path: 'play', component: PlayComponent },

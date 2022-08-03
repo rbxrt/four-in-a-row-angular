@@ -3,10 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { PlayComponent } from './play/play.component';
-import { StatsComponent } from './stats/stats.component';
-import { SettingsComponent } from './settings/settings.component';
-import { HomeComponent } from './home/home.component';
+import { PlayComponent } from './views/play/play.component';
+import { StatsComponent } from './views/stats/stats.component';
+import { SettingsComponent } from './views/settings/settings.component';
+import { HomeComponent } from './views/home/home.component';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { HomeComponent } from './home/home.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule.forRoot({}, {})
   ],
   providers: [],
   bootstrap: [AppComponent]
