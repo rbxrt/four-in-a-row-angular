@@ -1,6 +1,13 @@
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
 .board {
     display: flex;
     flex-direction: row;
+    margin: auto;
+    position: relative;
 }
 
 .col {
@@ -11,16 +18,16 @@
 .item {
     background-color: gainsboro;
     outline: 0;
-    border-radius: 48px;
-    width: 48px;
-    height: 48px;
+    border-radius: 56px;
+    width: 56px;
+    height: 56px;
     margin: 0.25rem;
     padding: 0.25rem;
 
     &.red {
-        background-color: red;
+        background-image: url("/assets/Red.svg");
     }
     &.yellow {
-        background-color: yellow;
+        background-image: url("/assets/Yellow.svg");
     }
 }

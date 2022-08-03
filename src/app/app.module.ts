@@ -1,13 +1,18 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { StoreModule } from '@ngrx/store';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { MaterialModule } from './material.module';
 import { AppRoutingModule } from './app-routing.module';
+
 import { AppComponent } from './app.component';
 import { PlayComponent } from './views/play/play.component';
 import { StatsComponent } from './views/stats/stats.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { HomeComponent } from './views/home/home.component';
-import { StoreModule } from '@ngrx/store';
+
+import { GameoverComponent } from './components/gameover/gameover.component';
 
 @NgModule({
   declarations: [
@@ -15,12 +20,15 @@ import { StoreModule } from '@ngrx/store';
     PlayComponent,
     StatsComponent,
     SettingsComponent,
-    HomeComponent
+    HomeComponent,
+    GameoverComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    StoreModule.forRoot({}, {})
+    StoreModule.forRoot({}, {}),
+    BrowserAnimationsModule,
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]

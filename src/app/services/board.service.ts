@@ -28,7 +28,7 @@ export class BoardService {
     const _board = new Array<ColProps[]>(7);
 
     for (let colIndex = 0; colIndex < 7; colIndex++) {
-      const _col = new Array<ColProps>(6).fill({ state: ColState.EMPTY });
+      let _col = new Array<ColProps>(6).fill({ state: ColState.EMPTY });
       _board[colIndex] = _col;
     }
 
@@ -43,15 +43,18 @@ export class BoardService {
     return this.board;
   }
 
-  public addToBoard(col: number, color: ColState.RED | ColState.YELLOW) {
+  public addToBoard(col: number, color: ColState.RED | ColState.YELLOW): boolean {
 
-    const _col = this.board[col];
-    const _lastEmptyPos = _col.findIndex(x => x.state === ColState.EMPTY);
+    let _col = this.board[col];
+    let _lastEmptyPos = _col.findIndex(x => x.state === ColState.EMPTY);
 
     if (_lastEmptyPos > -1) {
       this.board[col][_lastEmptyPos] = { state: color };
       this.checkForWinner();
+      return true;
     }
+
+    return false;
 
   }
 

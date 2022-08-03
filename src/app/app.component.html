@@ -1,10 +1,14 @@
-<nav class="menu">
-  <ul>
-    <li><a routerLink="/">{{title}}</a></li>
-    <li><a routerLink="/play">Spielen</a></li>
-    <li><a routerLink="/stats">Statistik</a></li>
-    <li><a routerLink="/settings">Einstellungen</a></li>
-  </ul>
-</nav>
+<mat-toolbar>
+  <a class="mat-toolbar-icon" routerLink="/play">
+    <img src="/assets/FourIcon.svg" alt="{{title}}" />
+  </a>
+  <span class="vertical-spacer"></span>
+  <button mat-icon-button routerLink="/stats">
+    <mat-icon>insights</mat-icon>
+  </button>
+  <button mat-icon-button routerLink="/settings">
+    <mat-icon>settings</mat-icon>
+  </button>
+</mat-toolbar>
 
 <router-outlet></router-outlet>
