@@ -14,6 +14,10 @@ import { HomeComponent } from './views/home/home.component';
 
 import { GameoverComponent } from './components/gameover/gameover.component';
 import { gameStateReducer } from './store/gameState.reducer';
+import { AppState } from './store/store.selectors';
+import { gameSettingsReducer } from './store/gameSettings.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreEffects } from './store/store.effects';
 
 @NgModule({
   declarations: [
@@ -27,7 +31,11 @@ import { gameStateReducer } from './store/gameState.reducer';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    StoreModule.forRoot({ gameState: gameStateReducer }),
+    StoreModule.forRoot<AppState>({ 
+      gameState: gameStateReducer, 
+      settings: gameSettingsReducer 
+    }),
+    EffectsModule.forRoot([StoreEffects]),
     BrowserAnimationsModule,
     MaterialModule
   ],

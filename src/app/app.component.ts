@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, map } from 'rxjs';
-import { AppState, selectPlayer } from './store/store';
+import { AppState, selectPlayer } from './store/store.selectors';
 
 @Component({
   selector: 'app-root',

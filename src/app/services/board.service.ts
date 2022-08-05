@@ -1,37 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { firstValueFrom, map } from 'rxjs';
-import { AppState, selectPlayer } from '../store/store';
+import { firstValueFrom } from 'rxjs';
+import { AppState, selectColor } from '../store/store.selectors';
+import { ColorEnum } from '../types/game';
 import { resetGame, setGameover, switchPlayer } from './../store/gameState.action';
 
-export enum ColState {
-  RED,
-  YELLOW,
-  EMPTY
+export interface FieldProps {
+  state: ColorEnum;
 }
-
-export interface ColProps {
-  state: ColState;
-}
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class BoardService {
 
-  public board: ColProps[][];
+  public board: FieldProps[][];
 
   constructor(private store: Store<AppState>) {
     this.board = this.createBoard();
   }
 
-  private createBoard(): ColProps[][] {
+  private createBoard(width: number = 7, height: number = 6): FieldProps[][] {
 
-    const _board = new Array<ColProps[]>(7);
+    const _board = new Array<FieldProps[]>(width);
 
-    for (let colIndex = 0; colIndex < 7; colIndex++) {
-      let _col = new Array<ColProps>(6).fill({ state: ColState.EMPTY });
+    for (let colIndex = 0; colIndex < width; colIndex++) {
+      let _col = new Array<FieldProps>(height).fill({ state: ColorEnum.EMPTY });
       _board[colIndex] = _col;
     }
 
@@ -49,19 +43,21 @@ export class BoardService {
   public async addToBoard(col: number) {
 
     let _col = this.board[col];
-    let _lastEmptyPos = _col.findIndex(x => x.state === ColState.EMPTY);
-    let _currentColor = await firstValueFrom(this.store.select(selectPlayer).pipe(map(s => s === 0 ? ColState.RED : ColState.YELLOW)));
+    let _lastEmptyPos = _col.findIndex(x => x.state === ColorEnum.EMPTY);
+    let _currentColor = await firstValueFrom(this.store.select(selectColor));
 
     if (_lastEmptyPos > -1) {
       this.board[col][_lastEmptyPos] = { state: _currentColor };
       let _gameHasWinner = this.checkForWinner();
-      let _gameHasDraw = this.checkForTie();
-      
-      if(_gameHasWinner || _gameHasDraw) {
-        
+      let _gameHasDraw = this.checkForDraw();
+
+      if (_gameHasWinner || _gameHasDraw) {
+
         this.store.dispatch(setGameover({
-          gameover: _gameHasWinner || _gameHasDraw, 
-          tie: _gameHasDraw
+          props: {
+            gameover: _gameHasWinner || _gameHasDraw,
+            draw: _gameHasDraw
+          }
         }));
 
       } else {
@@ -76,8 +72,8 @@ export class BoardService {
     return _winnerFound;
   }
 
-  private checkForTie(): boolean {
-    let _remainingEmpty = this.board.flatMap(c => c.filter(e => e.state === ColState.EMPTY)) || [];
+  private checkForDraw(): boolean {
+    let _remainingEmpty = this.board.flatMap(c => c.filter(e => e.state === ColorEnum.EMPTY)) || [];
     return _remainingEmpty.length === 0;
   }
 
@@ -86,16 +82,16 @@ export class BoardService {
     this.board.forEach(col => {
       let _matchCount = 1;
 
-      col.forEach((e, i, arr) => {
+      col.forEach((field, i, arr) => {
 
-        if (e.state !== ColState.EMPTY && e.state === arr[i - 1]?.state) {
+        if (field.state !== ColorEnum.EMPTY && field.state === arr[i - 1]?.state) {
           _matchCount++;
         } else {
           _matchCount = 1;
         }
 
         if (_matchCount === 4) {
-          console.info("4 gewinnt vertikal!")
+          console.info("4 in a row (vertical)!")
           _gameIsOver = true;
         }
       });
@@ -111,16 +107,16 @@ export class BoardService {
       let _row = this.board.flatMap(col => col[_rowIndex]);
       let _matchCount = 1;
 
-      _row.forEach((e, i, arr) => {
+      _row.forEach((field, i, arr) => {
 
-        if (e.state !== ColState.EMPTY && e.state === arr[i - 1]?.state) {
+        if (field.state !== ColorEnum.EMPTY && field.state === arr[i - 1]?.state) {
           _matchCount++;
         } else {
           _matchCount = 1;
         }
 
         if (_matchCount === 4) {
-          console.info("4 gewinnt horizontal!")
+          console.info("4 in a row (horizontal)!")
           _gameIsOver = true;
         }
       });
@@ -134,22 +130,22 @@ export class BoardService {
 
     this.board.forEach((col, i, board) => {
 
-      col.forEach((e, j, currentCol) => {
-        
+      col.forEach((field, j, currentCol) => {
+
         //from south east to north west
         let _localIndex1 = i + 1;
         let _localIndex2 = j + 1;
         let _matchCount = 1;
 
         while (_localIndex1 <= board.length || _localIndex2 <= currentCol.length) {
-          if (e.state !== ColState.EMPTY && e.state === board[_localIndex1]?.[_localIndex2]?.state) {
+          if (field.state !== ColorEnum.EMPTY && field.state === board[_localIndex1]?.[_localIndex2]?.state) {
             _matchCount++;
           } else {
             _matchCount = 1;
           }
 
           if (_matchCount === 4) {
-            console.info("4 gewinnt diagonal (se->nw)!")
+            console.info("4 in a row (diagonal, se->nw)!")
             _gameIsOver = true;
             break;
           }
@@ -163,14 +159,14 @@ export class BoardService {
         _matchCount = 1;
 
         while (!_gameIsOver && (_localIndex1 <= board.length || _localIndex2 >= 0)) {
-          if (e.state !== ColState.EMPTY && e.state === board[_localIndex1]?.[_localIndex2]?.state) {
+          if (field.state !== ColorEnum.EMPTY && field.state === board[_localIndex1]?.[_localIndex2]?.state) {
             _matchCount++;
           } else {
             _matchCount = 1;
           }
 
           if (_matchCount === 4) {
-            console.info("4 gewinnt diagonal (ne->sw)!")
+            console.info("4 in a row (diagonal, ne->sw)!")
             _gameIsOver = true;
             break;
           }

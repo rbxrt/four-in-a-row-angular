@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { map, Observable } from 'rxjs';
-import { AppState, selectPlayer, selectTie } from 'src/app/store/store';
+import { Observable } from 'rxjs';
+import { AppState, selectWinner  } from 'src/app/store/store.selectors';
+import { ResultEnum } from 'src/app/types/game';
 
 @Component({
   selector: 'app-gameover',
@@ -10,13 +11,11 @@ import { AppState, selectPlayer, selectTie } from 'src/app/store/store';
   styleUrls: ['./gameover.component.scss']
 })
 export class GameoverComponent {
-
-  winner$: Observable<string>;
-  tie$: Observable<boolean>;
+  RESULT = ResultEnum;
+  winner$: Observable<ResultEnum>;
 
   constructor(public dialogRef: MatDialogRef<GameoverComponent>, private store: Store<AppState>) {
-    this.tie$ = store.select(selectTie)
-    this.winner$ = store.select(selectPlayer).pipe(map(p => p === 0 ? "RED" : "YELLOW"));
+    this.winner$ = store.select(selectWinner);
   }
 
   onCancelClick(): void {

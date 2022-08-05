@@ -3,16 +3,16 @@ import { setGameover, switchPlayer, resetGame, GameStateProps } from './gameStat
 
 export const initialState: GameStateProps = {
   gameover: false,
-  tie: false,
+  draw: false,
   player: 0
 };
 
 
 export const gameStateReducer = createReducer(
   initialState,
-  on(setGameover, (state, {gameover, tie}): GameStateProps => ({...state, 
-    gameover: gameover ?? false, 
-    tie: tie ?? false 
+  on(setGameover, (state, { props }): GameStateProps => ({...state, 
+    gameover: props.gameover ?? false, 
+    draw: props.draw ?? false 
   })),
   on(switchPlayer, (state): GameStateProps => ({ ...state, 
     player: (state.player + 1) % 2 

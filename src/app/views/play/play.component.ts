@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { firstValueFrom, Subscription } from 'rxjs';
+import {  Store } from '@ngrx/store';
+import { filter, firstValueFrom, Subscription, switchMap } from 'rxjs';
 import { GameoverComponent } from 'src/app/components/gameover/gameover.component';
-import { BoardService, ColProps, ColState } from 'src/app/services/board.service';
+import { BoardService, FieldProps } from 'src/app/services/board.service';
 import { resetGame } from 'src/app/store/gameState.action';
-import { AppState, selectGameover } from 'src/app/store/store';
+import { AppState, selectGameover } from 'src/app/store/store.selectors';
+import { ColorEnum } from 'src/app/types/game';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { AppState, selectGameover } from 'src/app/store/store';
 })
 export class PlayComponent implements OnInit, OnDestroy {
 
-  board: ColProps[][];
+  board: FieldProps[][];
   subscription: Subscription | undefined;
 
   constructor(public dialog: MatDialog, private boardService: BoardService, private store: Store<AppState>) {
@@ -23,11 +24,16 @@ export class PlayComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.store.select(selectGameover).subscribe(gameover => {
+    this.subscription = this.store.select(selectGameover).pipe(       
+      filter(g => g),
+      switchMap(() => this.openDialog())).subscribe(res => {
 
-      if (gameover) {
-        this.openDialog();
-      }
+        if (res) {
+          this.onReset();
+        }
+        else {
+          console.log("cancel");
+        }
     });
 
   }
@@ -37,27 +43,18 @@ export class PlayComponent implements OnInit, OnDestroy {
     }
   }
 
-
   openDialog() {
     let dialogRef = this.dialog.open(GameoverComponent);
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.onReset();
-      }
-      else {
-        console.log("cancel");
-      }
-    });
+    return dialogRef.afterClosed();
   }
 
-  renderState(s: ColState | undefined) {
+  renderState(s: ColorEnum | undefined) {
     switch (s) {
-      case ColState.YELLOW:
+      case ColorEnum.YELLOW:
         return "yellow"
-      case ColState.RED:
+      case ColorEnum.RED:
         return "red"
-      case ColState.EMPTY:
+      case ColorEnum.EMPTY:
       default:
         return "";
     }
