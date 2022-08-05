@@ -1,0 +1,15 @@
+:host {
+    padding: 1rem;
+    width: 100%;
+    display: block;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.slider-wrapper {
+    display: flex;
+    align-items: center;
+    > mat-slider {
+        flex: 1;
+    }
+}

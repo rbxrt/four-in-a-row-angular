@@ -1,1 +1,11 @@
-<p>settings works!</p>
+<p>Adjust your board size:</p>
+<div class="slider-wrapper">
+    <mat-icon>swap_horiz</mat-icon>
+    <mat-slider thumbLabel tickInterval="1" min="6" max="12" step="1" [(ngModel)]="widthValue">
+    </mat-slider>
+</div>
+<div class="slider-wrapper">
+    <mat-icon>swap_vert</mat-icon>
+    <mat-slider thumbLabel tickInterval="1" min="5" max="10" step="1" [(ngModel)]="heightValue">
+    </mat-slider>
+</div>

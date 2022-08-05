@@ -18,6 +18,7 @@ import { AppState } from './store/store.selectors';
 import { gameSettingsReducer } from './store/gameSettings.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreEffects } from './store/store.effects';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { StoreEffects } from './store/store.effects';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     StoreModule.forRoot<AppState>({ 
       gameState: gameStateReducer, 
       settings: gameSettingsReducer 
