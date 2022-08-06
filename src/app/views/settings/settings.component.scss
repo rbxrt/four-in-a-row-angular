@@ -13,3 +13,13 @@
         flex: 1;
     }
 }
+
+.description {
+    align-self: flex-start;
+}
+
+.board-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

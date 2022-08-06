@@ -4,6 +4,7 @@
     "projects/**/*"
   ],
   "overrides": [
+    // default component eslint-rules
     {
       "files": [
         "*.ts"
@@ -37,6 +38,7 @@
         ]
       }
     },
+    // default template eslint-rules
     {
       "files": [
         "*.html"
@@ -46,15 +48,31 @@
       ],
       "rules": {}
     },
+    // custom eslint-rules
     {
       "files": [
         "*.ts"
       ],
+      "plugins": ["@typescript-eslint", "import", "prettier", "simple-import-sort"],
       "extends": [
-        "plugin:@ngrx/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
+        "plugin:@ngrx/recommended",
+        "plugin:prettier/recommended",
+        "prettier"
       ],
+      "parser": "@typescript-eslint/parser",
+      "settings": {
+        "import/resolver": {
+          "typescript": true,
+          "node": true
+        }
+      },
       "rules": {
-        "@ngrx/no-typed-global-store": "off"
+        "@ngrx/no-typed-global-store": "off",
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error"
       }
     }
   ]

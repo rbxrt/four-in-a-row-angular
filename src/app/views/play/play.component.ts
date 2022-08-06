@@ -1,41 +1,40 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {  Store } from '@ngrx/store';
+import { GameoverComponent } from '@components/gameover/gameover.component';
+import { Store } from '@ngrx/store';
+import { BoardService, FieldProps } from '@services/board.service';
+import { resetGame } from '@store/gameState.action';
+import { AppState, selectIsGameover } from '@store/store.selectors';
 import { filter, firstValueFrom, Subscription, switchMap } from 'rxjs';
-import { GameoverComponent } from 'src/app/components/gameover/gameover.component';
-import { BoardService, FieldProps } from 'src/app/services/board.service';
-import { resetGame } from 'src/app/store/gameState.action';
-import { AppState, selectGameover } from 'src/app/store/store.selectors';
-import { ColorEnum } from 'src/app/types/game';
-
+import { ColorEnum } from 'types';
 
 @Component({
   selector: 'app-play',
   templateUrl: './play.component.html',
-  styleUrls: ['./play.component.scss']
+  styleUrls: ['./play.component.scss'],
 })
 export class PlayComponent implements OnInit, OnDestroy {
-
-  board: FieldProps[][];
+  board: FieldProps[][] | undefined;
   subscription: Subscription | undefined;
 
   constructor(public dialog: MatDialog, private boardService: BoardService, private store: Store<AppState>) {
-    this.board = boardService.board;
+    this.board = this.boardService.initialize();
   }
 
   ngOnInit(): void {
-    this.subscription = this.store.select(selectGameover).pipe(       
-      filter(g => g),
-      switchMap(() => this.openDialog())).subscribe(res => {
-
+    this.subscription = this.store
+      .select(selectIsGameover)
+      .pipe(
+        filter((g) => g),
+        switchMap(() => this.openDialog()),
+      )
+      .subscribe((res) => {
         if (res) {
           this.onReset();
+        } else {
+          console.log('cancel');
         }
-        else {
-          console.log("cancel");
-        }
-    });
-
+      });
   }
   ngOnDestroy(): void {
     if (this.subscription) {
@@ -44,34 +43,31 @@ export class PlayComponent implements OnInit, OnDestroy {
   }
 
   openDialog() {
-    let dialogRef = this.dialog.open(GameoverComponent);
+    const dialogRef = this.dialog.open(GameoverComponent);
     return dialogRef.afterClosed();
   }
 
   renderState(s: ColorEnum | undefined) {
     switch (s) {
       case ColorEnum.YELLOW:
-        return "yellow"
+        return 'yellow';
       case ColorEnum.RED:
-        return "red"
+        return 'red';
       case ColorEnum.EMPTY:
       default:
-        return "";
+        return '';
     }
   }
 
   async addToken(i: number) {
-
-    if (await firstValueFrom(this.store.select(selectGameover))) {
+    if (await firstValueFrom(this.store.select(selectIsGameover))) {
       return;
     }
-      this.boardService.addToBoard(i);
-    
+    this.boardService.addToBoard(i);
   }
 
   onReset() {
     this.store.dispatch(resetGame());
-    this.board = this.boardService.initialize()
+    this.board = this.boardService.initialize();
   }
-
 }

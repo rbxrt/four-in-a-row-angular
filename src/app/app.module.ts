@@ -1,47 +1,38 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { StoreModule } from '@ngrx/store';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import { MaterialModule } from './material.module';
-import { AppRoutingModule } from './app-routing.module';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 
 import { AppComponent } from './app.component';
-import { PlayComponent } from './views/play/play.component';
-import { StatsComponent } from './views/stats/stats.component';
-import { SettingsComponent } from './views/settings/settings.component';
-import { HomeComponent } from './views/home/home.component';
-
+import { AppRoutingModule } from './app-routing.module';
 import { GameoverComponent } from './components/gameover/gameover.component';
-import { gameStateReducer } from './store/gameState.reducer';
-import { AppState } from './store/store.selectors';
+import { MaterialModule } from './material.module';
 import { gameSettingsReducer } from './store/gameSettings.reducer';
-import { EffectsModule } from '@ngrx/effects';
+import { gameStateReducer } from './store/gameState.reducer';
 import { StoreEffects } from './store/store.effects';
-import { FormsModule } from '@angular/forms';
+import { AppState } from './store/store.selectors';
+import { HomeComponent } from './views/home/home.component';
+import { PlayComponent } from './views/play/play.component';
+import { SettingsComponent } from './views/settings/settings.component';
+import { StatsComponent } from './views/stats/stats.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PlayComponent,
-    StatsComponent,
-    SettingsComponent,
-    HomeComponent,
-    GameoverComponent
-  ],
+  declarations: [AppComponent, PlayComponent, StatsComponent, SettingsComponent, HomeComponent, GameoverComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    StoreModule.forRoot<AppState>({ 
-      gameState: gameStateReducer, 
-      settings: gameSettingsReducer 
+    StoreModule.forRoot<AppState>({
+      gameState: gameStateReducer,
+      settings: gameSettingsReducer,
     }),
     EffectsModule.forRoot([StoreEffects]),
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

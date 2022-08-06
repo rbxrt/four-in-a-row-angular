@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
-import { StatsService } from 'src/app/services/stats.service';
-import { GameStatistics } from 'src/app/types/game';
+import { StatsService } from '@services/stats.service';
+import { GameStatisticsProps } from 'types';
 
 @Component({
   selector: 'app-stats',
   templateUrl: './stats.component.html',
-  styleUrls: ['./stats.component.scss']
+  styleUrls: ['./stats.component.scss'],
 })
 export class StatsComponent {
+  _statsFromStorage: GameStatisticsProps;
 
-  _statsFromStorage: GameStatistics;
-
-  constructor(private statistics: StatsService) { 
+  constructor(private statistics: StatsService) {
     this._statsFromStorage = this.statistics.getStatistics();
   }
 }

@@ -1,17 +1,15 @@
-
-export enum ColorEnum {
-    RED,
-    YELLOW,
-    EMPTY
+export interface GameStateProps {
+  gameover: boolean;
+  draw: boolean;
+  player: number;
 }
 
-export enum ResultEnum {
-    Red = "Red",
-    Yellow = "Yellow",
-    None = "Draw"
+export interface GameStatisticsProps {
+  yellowIsWinner: number;
+  redIsWinner: number;
 }
 
-export interface GameStatistics {
-    yellowIsWinner: number,
-    redIsWinner: number
+export interface GameSettingsProps {
+  width: number;
+  height: number;
 }

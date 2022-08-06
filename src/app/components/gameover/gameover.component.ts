@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
+import { AppState, selectWinner } from '@store/store.selectors';
 import { Observable } from 'rxjs';
-import { AppState, selectWinner  } from 'src/app/store/store.selectors';
-import { ResultEnum } from 'src/app/types/game';
+import { ResultEnum } from 'types';
 
 @Component({
   selector: 'app-gameover',
   templateUrl: './gameover.component.html',
-  styleUrls: ['./gameover.component.scss']
+  styleUrls: ['./gameover.component.scss'],
 })
 export class GameoverComponent {
   RESULT = ResultEnum;
@@ -21,5 +21,4 @@ export class GameoverComponent {
   onCancelClick(): void {
     this.dialogRef.close(false);
   }
-
 }
