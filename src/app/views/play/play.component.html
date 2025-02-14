@@ -1,6 +1,12 @@
-<div class="board" *ngIf="board">
-    <div class="col" *ngFor="let cols of board, index as i">
-        <button type="button" class="item" [ngClass]="renderState(pos?.state)" *ngFor="let pos of cols, index as j" (click)="addToken(i)">
-        </button>
-    </div>
-</div>
+@if (board) {
+  <div class="board">
+    @for (cols of board; track cols; let i = $index) {
+      <div class="col">
+        @for (pos of cols; track pos; let j = $index) {
+          <button type="button" class="item" [ngClass]="renderState(pos?.state)" (click)="addToken(i)">
+          </button>
+        }
+      </div>
+    }
+  </div>
+}

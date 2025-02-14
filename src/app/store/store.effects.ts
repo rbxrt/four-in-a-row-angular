@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
+import { Injectable, inject } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { concatLatestFrom } from '@ngrx/operators';
 import { Store } from '@ngrx/store';
 import { StatsService } from '@services/stats.service';
 import { map, tap } from 'rxjs';
@@ -10,6 +11,10 @@ import { AppState, selectCurrentPlayer } from './store.selectors';
 
 @Injectable()
 export class StoreEffects {
+  private readonly statsService = inject(StatsService);
+  private readonly store = inject<Store<AppState>>(Store);
+  private readonly actions = inject(Actions);
+
   //automatically update local storage after the "setGameover" event fires.
   persistWinner$ = createEffect(
     () => {
@@ -35,6 +40,4 @@ export class StoreEffects {
     },
     { dispatch: false },
   );
-
-  constructor(private readonly statsService: StatsService, private readonly store: Store<AppState>, private readonly actions: Actions) {}
 }

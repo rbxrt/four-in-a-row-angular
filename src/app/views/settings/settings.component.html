@@ -1,21 +1,27 @@
 <div class="settings-toolbar">
-    <p class="description">Adjust your board size:</p>
-    <div class="slider-wrapper">
-        <mat-icon>swap_horiz</mat-icon>
-        <mat-slider thumbLabel tickInterval="1" min="6" max="12" step="1" [(ngModel)]="widthValue" (ngModelChange)="widthChanged($event)">
-        </mat-slider>
-    </div>
-    <div class="slider-wrapper">
-        <mat-icon>swap_vert</mat-icon>
-        <mat-slider thumbLabel tickInterval="1" min="5" max="10" step="1" [(ngModel)]="heightValue" (ngModelChange)="heightChanged($event)">
-        </mat-slider>
-    </div>
+  <p class="description">Adjust your board size:</p>
+  <div class="slider-wrapper">
+    <mat-icon>swap_horiz</mat-icon>
+    <mat-slider min="6" max="12" step="1">
+      <input matSliderThumb [(ngModel)]="widthValue" (ngModelChange)="widthChanged($event)" />
+    </mat-slider>
+  </div>
+  <div class="slider-wrapper">
+    <mat-icon>swap_vert</mat-icon>
+    <mat-slider min="5" max="10" step="1">
+      <input matSliderThumb [(ngModel)]="heightValue" (ngModelChange)="heightChanged($event)" />
+    </mat-slider>
+  </div>
 </div>
 <div class="board-preview">
-    <p class="description">This is the size of your board:</p>
-    <span *ngFor="let numH of counter(heightValue)">
-        <span *ngFor="let numW of counter(widthValue)">
-            <mat-icon>circle</mat-icon>
+  <p class="description">This is the size of your board:</p>
+  @for (numH of counter(heightValue); track numH) {
+    <span>
+      @for (numW of counter(widthValue); track numW) {
+        <span>
+          <mat-icon>circle</mat-icon>
         </span>
+      }
     </span>
+  }
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GameoverComponent } from '@components/gameover/gameover.component';
 import { Store } from '@ngrx/store';
@@ -7,17 +7,24 @@ import { resetGame } from '@store/gameState.action';
 import { AppState, selectIsGameover } from '@store/store.selectors';
 import { filter, firstValueFrom, Subscription, switchMap } from 'rxjs';
 import { ColorEnum } from 'types';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-play',
   templateUrl: './play.component.html',
   styleUrls: ['./play.component.scss'],
+  standalone: true,
+  imports: [NgClass],
 })
 export class PlayComponent implements OnInit, OnDestroy {
+  dialog = inject(MatDialog);
+  private boardService = inject(BoardService);
+  private store = inject<Store<AppState>>(Store);
+
   board: FieldProps[][] | undefined;
   subscription: Subscription | undefined;
 
-  constructor(public dialog: MatDialog, private boardService: BoardService, private store: Store<AppState>) {
+  constructor() {
     this.board = this.boardService.initialize();
   }
 

@@ -1,10 +1,13 @@
 <h1 mat-dialog-title>Gameover!</h1>
 <div mat-dialog-content>
-    <p *ngIf="(winner$ | async) !== RESULT.None;else draw_content">Congratulations {{(winner$ | async) }}!</p>
-    <p>Do you want to play again?</p>
-    <ng-template #draw_content>The game ends in a draw...</ng-template>
+  @if ((winner$ | async) !== RESULT.None) {
+    <p>Congratulations {{(winner$ | async) }}!</p>
+  } @else {
+    The game ends in a draw...
+  }
+  <p>Do you want to play again?</p>
 </div>
 <div mat-dialog-actions>
-    <button mat-button (click)="onCancelClick()">No Thanks</button>
-    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="onCancelClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Ok</button>
 </div>

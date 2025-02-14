@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { resetGame, setGameover, switchPlayer } from '@store/gameState.action';
 import { AppState, selectCurrentColor } from '@store/store.selectors';
@@ -15,9 +15,12 @@ export interface FieldProps {
   providedIn: 'root',
 })
 export class BoardService {
+  private store = inject<Store<AppState>>(Store);
+  private settings = inject(SettingsService);
+
   public board: FieldProps[][];
 
-  constructor(private store: Store<AppState>, private settings: SettingsService) {
+  constructor() {
     this.board = this.createBoard();
   }
 

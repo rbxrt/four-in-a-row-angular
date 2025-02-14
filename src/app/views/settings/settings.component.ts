@@ -1,17 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SettingsService } from '@services/settings.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSliderModule } from '@angular/material/slider';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
+  standalone: true,
+  imports: [MatIconModule, MatSliderModule, FormsModule],
 })
 export class SettingsComponent {
+  private service = inject(SettingsService);
+
   widthValue: number;
   heightValue: number;
   counter = Array;
 
-  constructor(private service: SettingsService) {
+  constructor() {
     const dimensions = this.service.getDimensions();
     this.heightValue = dimensions?.height ?? 6;
     this.widthValue = dimensions?.width ?? 7;
