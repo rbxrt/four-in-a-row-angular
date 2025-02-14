@@ -4,7 +4,6 @@
     "projects/**/*"
   ],
   "overrides": [
-    // default component eslint-rules
     {
       "files": [
         "*.ts"
@@ -38,7 +37,6 @@
         ]
       }
     },
-    // default template eslint-rules
     {
       "files": [
         "*.html"
@@ -48,12 +46,16 @@
       ],
       "rules": {}
     },
-    // custom eslint-rules
     {
       "files": [
         "*.ts"
       ],
-      "plugins": ["@typescript-eslint", "import", "prettier", "simple-import-sort"],
+      "plugins": [
+        "@typescript-eslint",
+        "import",
+        "prettier",
+        "simple-import-sort"
+      ],
       "extends": [
         "plugin:@typescript-eslint/recommended",
         "plugin:import/recommended",
