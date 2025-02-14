@@ -8,8 +8,8 @@ describe('GameoverComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [GameoverComponent],
-}).compileComponents();
+      imports: [GameoverComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(GameoverComponent);
     component = fixture.componentInstance;

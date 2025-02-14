@@ -1,14 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { SettingsService } from '@services/settings.service';
+import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
-import { FormsModule } from '@angular/forms';
+import { SettingsService } from '@services/settings.service';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
-  standalone: true,
   imports: [MatIconModule, MatSliderModule, FormsModule],
 })
 export class SettingsComponent {

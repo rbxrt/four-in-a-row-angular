@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { GameSettingsProps } from 'types';
 
 import { LocalStorageService } from './local-storage.service';
@@ -10,7 +10,6 @@ const SETTINGS_KEY = 'game-settings';
 })
 export class SettingsService {
   private storage = inject(LocalStorageService);
-
 
   public getDimensions() {
     const _statistics = this.storage.getData(SETTINGS_KEY);

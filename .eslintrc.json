@@ -52,6 +52,7 @@
       ],
       "plugins": [
         "@typescript-eslint",
+        "@ngrx",
         "import",
         "prettier",
         "simple-import-sort"
@@ -60,7 +61,6 @@
         "plugin:@typescript-eslint/recommended",
         "plugin:import/recommended",
         "plugin:import/typescript",
-        "plugin:@ngrx/recommended",
         "plugin:prettier/recommended",
         "prettier"
       ],

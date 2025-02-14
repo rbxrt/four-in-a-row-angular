@@ -24,7 +24,9 @@ export const selectWinner = createSelector(selectGameState, (state: GameStatePro
 
 export const selectCurrentPlayer = createSelector(selectGameState, (state: GameStateProps) => state.player);
 
-export const selectCurrentColor = createSelector(selectGameState, (state: GameStateProps) => (state.player === 0 ? ColorEnum.RED : ColorEnum.YELLOW));
+export const selectCurrentColor = createSelector(selectGameState, (state: GameStateProps) =>
+  state.player === 0 ? ColorEnum.RED : ColorEnum.YELLOW,
+);
 
 export const selectWidth = createSelector(selectGameSettings, (state: GameSettingsProps) => state.width);
 

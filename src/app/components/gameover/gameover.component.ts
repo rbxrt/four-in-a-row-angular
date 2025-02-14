@@ -1,17 +1,16 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { AppState, selectWinner } from '@store/store.selectors';
 import { Observable } from 'rxjs';
 import { ResultEnum } from 'types';
-import { AsyncPipe } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-gameover',
   templateUrl: './gameover.component.html',
   styleUrls: ['./gameover.component.scss'],
-  standalone: true,
   imports: [MatDialogModule, MatButtonModule, AsyncPipe],
 })
 export class GameoverComponent {

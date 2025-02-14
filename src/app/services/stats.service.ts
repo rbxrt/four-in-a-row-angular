@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { GameStatisticsProps as GameStatisticsProps } from 'types';
 
 import { LocalStorageService } from './local-storage.service';
@@ -15,7 +15,6 @@ const INITIAL_VALUE: GameStatisticsProps = {
 })
 export class StatsService {
   private storage = inject(LocalStorageService);
-
 
   public increaseRedCounter() {
     const currentValue = this.getStatistics();
