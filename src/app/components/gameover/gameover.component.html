@@ -1,13 +1,13 @@
-<h1 mat-dialog-title>Gameover!</h1>
-<div mat-dialog-content>
+<div class="flex flex-col mb-8">
   @if ((winner$ | async) !== RESULT.None) {
-    <p>Congratulations {{(winner$ | async) }}!</p>
+    <p>Congratulations {{ winner$ | async }}!</p>
   } @else {
-    The game ends in a draw...
+    <p>The game ends in a draw...</p>
   }
   <p>Do you want to play again?</p>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onCancelClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Ok</button>
+
+<div class="flex justify-end gap-2">
+  <p-button label="No, thanks" icon="pi pi-times" severity="danger" (click)="onCancelClick()" />
+  <p-button label="Yes, please" icon="pi pi-check" (click)="onOkClick()" />
 </div>

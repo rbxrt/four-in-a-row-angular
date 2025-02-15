@@ -1,29 +1,25 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { AppState, selectWinner } from '@store/store.selectors';
-import { Observable } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ResultEnum } from 'types';
 
 @Component({
   selector: 'app-gameover',
   templateUrl: './gameover.component.html',
-  styleUrls: ['./gameover.component.scss'],
-  imports: [MatDialogModule, MatButtonModule, AsyncPipe],
+  imports: [ButtonModule, AsyncPipe],
 })
 export class GameoverComponent {
-  dialogRef = inject<MatDialogRef<GameoverComponent>>(MatDialogRef);
+  private dialogRef = inject(DynamicDialogRef);
   private store = inject<Store<AppState>>(Store);
 
   RESULT = ResultEnum;
-  winner$: Observable<ResultEnum>;
+  winner$ = this.store.select(selectWinner);
 
-  constructor() {
-    const store = this.store;
-
-    this.winner$ = store.select(selectWinner);
+  onOkClick() {
+    this.dialogRef.close(true);
   }
 
   onCancelClick(): void {

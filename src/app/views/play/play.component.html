@@ -1,12 +1,21 @@
-@if (board) {
-  <div class="board">
-    @for (cols of board; track cols; let i = $index) {
-      <div class="col">
-        @for (pos of cols; track pos; let j = $index) {
-          <button type="button" class="item" [ngClass]="renderState(pos?.state)" (click)="addToken(i)">
-          </button>
-        }
-      </div>
-    }
-  </div>
-}
+<div class="flex flex-col m-4">
+  @if (board) {
+    <div class="flex m-auto relative">
+      @for (cols of board; track $index; let idx = $index) {
+        <div class="flex flex-col-reverse">
+          @for (pos of cols; track $index) {
+            <button
+              type="button"
+              class="item"
+              [class]="{
+                red: pos.state === ColorEnum.RED,
+                yellow: pos.state === ColorEnum.YELLOW,
+              }"
+              (click)="addToken(idx)"
+            ></button>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

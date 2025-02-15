@@ -1,14 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSliderModule } from '@angular/material/slider';
 import { SettingsService } from '@services/settings.service';
+import { SliderModule } from 'primeng/slider';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss'],
-  imports: [MatIconModule, MatSliderModule, FormsModule],
+  imports: [SliderModule, FormsModule],
 })
 export class SettingsComponent {
   private service = inject(SettingsService);

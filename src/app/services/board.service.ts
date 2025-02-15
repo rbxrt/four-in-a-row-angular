@@ -4,7 +4,6 @@ import { resetGame, setGameover, switchPlayer } from '@store/gameState.action';
 import { AppState, selectCurrentColor } from '@store/store.selectors';
 import { firstValueFrom } from 'rxjs';
 import { ColorEnum } from 'types';
-
 import { SettingsService } from './settings.service';
 
 export interface FieldProps {

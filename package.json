@@ -1,6 +1,9 @@
 {
   "name": "four-in-a-row",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "author": {
+    "name": "rbxrt"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -12,18 +15,20 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^19.1.6",
-    "@angular/cdk": "^19.1.4",
     "@angular/common": "^19.1.6",
     "@angular/compiler": "^19.1.6",
     "@angular/core": "^19.1.6",
     "@angular/forms": "^19.1.6",
-    "@angular/material": "^19.1.4",
     "@angular/platform-browser": "^19.1.6",
     "@angular/platform-browser-dynamic": "^19.1.6",
     "@angular/router": "^19.1.6",
     "@ngrx/effects": "^19.0.1",
     "@ngrx/operators": "^19.0.1",
     "@ngrx/store": "^19.0.1",
+    "@primeng/themes": "^19.0.6",
+    "chart.js": "^4.4.7",
+    "primeicons": "^7.0.0",
+    "primeng": "^19.0.6",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -39,8 +44,10 @@
     "@angular/compiler-cli": "^19.1.6",
     "@ngrx/eslint-plugin": "^19.0.1",
     "@types/jasmine": "~5.1.0",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
     "@typescript-eslint/parser": "^8.24.0",
+    "autoprefixer": "^10.4.20",
     "eslint": "^9.20.1",
     "eslint-config-prettier": "^10.0.0",
     "eslint-import-resolver-typescript": "^3.8.0",
@@ -53,6 +60,9 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^3.4.17",
+    "tailwindcss-primeui": "^0.4.0",
     "typescript": "~5.7.3"
   }
 }

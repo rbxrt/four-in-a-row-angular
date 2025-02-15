@@ -1,26 +1,36 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState, selectCurrentPlayer } from '@store/store.selectors';
-import { map, Observable } from 'rxjs';
+import { MenubarModule } from 'primeng/menubar';
+import { ButtonModule } from 'primeng/button';
+import { map } from 'rxjs';
+import { AppState, selectCurrentPlayer, selectIsGameover } from '@store/store.selectors';
+import { resetGame } from '@store/gameState.action';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  imports: [MatIconModule, MatToolbarModule, MatButtonModule, RouterLink, RouterOutlet, AsyncPipe],
+  imports: [ButtonModule, MenubarModule, RouterLink, RouterOutlet, AsyncPipe],
 })
 export class AppComponent {
   private store = inject<Store<AppState>>(Store);
 
-  activePlayer$: Observable<string>;
+  activePlayer$ = this.store.select(selectCurrentPlayer).pipe(map((p) => (p === 0 ? "RED's" : "YELLOW's")));
+  isGameOver$ = this.store.select(selectIsGameover);
   title = 'four-in-a-row';
+  menuItems = [
+    { link: '/play', name: 'Play', icon: 'pi-play' },
+    { link: '/stats', name: 'History', icon: 'pi-chart-bar' },
+    { link: '/settings', name: 'Settings', icon: 'pi-cog' },
+  ];
 
-  constructor() {
-    this.activePlayer$ = this.store.select(selectCurrentPlayer).pipe(map((p) => (p === 0 ? "RED's" : "YELLOW's")));
+  restart() {
+    this.store.dispatch(resetGame());
+  }
+
+  toggleDarkMode() {
+    const element = document.querySelector('html')!;
+    element.classList.toggle('dark');
   }
 }

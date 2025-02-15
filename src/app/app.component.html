@@ -1,16 +1,27 @@
-<mat-toolbar>
-  <a class="mat-toolbar-icon" routerLink="/play">
-    <img src="/FourIcon.svg" alt="{{title}}" />
-  </a>
-  <span class="active-player">
-    It's {{ activePlayer$ | async }} turn!
-  </span>
-  <button mat-icon-button routerLink="/stats">
-    <mat-icon>insights</mat-icon>
-  </button>
-  <button mat-icon-button routerLink="/settings">
-    <mat-icon>settings</mat-icon>
-  </button>
-</mat-toolbar>
+<p-menubar [model]="menuItems">
+  <ng-template #start>
+    <img class="w-8 h-auto" src="/FourIcon.svg" alt="{{ title }}" />
+  </ng-template>
+
+  <ng-template #item let-item>
+    <a [routerLink]="item.link" class="p-menubar-item-link">
+      <span class="pi" [class]="item.icon"></span>
+      <span class="ml-2">{{ item.name }}</span>
+    </a>
+  </ng-template>
+
+  <ng-template #end>
+    <div class="flex items-center gap-4">
+
+      @if (isGameOver$ | async) {
+        <p-button icon="pi pi-refresh" [rounded]="true" severity="secondary" (onClick)="restart()"/>
+      } @else {
+        <p>It's {{ activePlayer$ | async }} turn!</p>
+      }
+
+      <p-button icon="pi pi-moon" [rounded]="true" severity="secondary" (onClick)="toggleDarkMode()"/>
+    </div>
+  </ng-template>
+</p-menubar>
 
 <router-outlet></router-outlet>

@@ -1,29 +1,5 @@
-:host {
-    display: flex;
-    flex-direction: column;
-    margin: 1rem;
-}
-
-.board {
-    display: flex;
-    flex-direction: row;
-    margin: auto;
-    position: relative;
-}
-
-.col {
-    display: flex;
-    flex-direction: column-reverse;
-}
-
 .item {
-    background-color: gainsboro;
-    outline: 0;
-    border-radius: 56px;
-    width: 56px;
-    height: 56px;
-    margin: 0.25rem;
-    padding: 0.25rem;
+    @apply bg-surface-200 dark:bg-surface-600 hover:bg-surface-400 outline-0 p-1 m-1 h-14 w-14 rounded-full;
 
     &.red {
         background-image: url("/Red.svg");

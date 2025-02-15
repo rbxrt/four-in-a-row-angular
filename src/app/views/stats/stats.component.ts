@@ -1,19 +1,50 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChartModule } from 'primeng/chart';
 import { StatsService } from '@services/stats.service';
-import { GameStatisticsProps } from 'types';
 
 @Component({
   selector: 'app-stats',
   templateUrl: './stats.component.html',
-  styleUrls: ['./stats.component.scss'],
-  standalone: true,
+  imports: [ChartModule],
 })
-export class StatsComponent {
+export class StatsComponent implements OnInit {
   private statistics = inject(StatsService);
+  private cd = inject(ChangeDetectorRef);
+  private statsFromStorage = this.statistics.getStatistics();
 
-  _statsFromStorage: GameStatisticsProps;
+  data: any;
+  options: any;
 
-  constructor() {
-    this._statsFromStorage = this.statistics.getStatistics();
+  ngOnInit() {
+    this.initChart();
+  }
+
+  initChart() {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+
+    this.data = {
+      labels: ['Red', 'Yellow'],
+      datasets: [
+        {
+          label: 'Winnings',
+          data: [this.statsFromStorage.redIsWinner, this.statsFromStorage.yellowIsWinner],
+          backgroundColor: [documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-yellow-500')],
+          hoverBackgroundColor: [documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-yellow-400')],
+        },
+      ],
+    };
+
+    this.options = {
+      plugins: {
+        legend: {
+          labels: {
+            usePointStyle: true,
+            color: textColor,
+          },
+        },
+      },
+    };
+    this.cd.markForCheck();
   }
 }
