@@ -7,6 +7,7 @@ export interface GameStateProps {
 export interface GameStatisticsProps {
   yellowIsWinner: number;
   redIsWinner: number;
+  draw: number;
 }
 
 export interface GameSettingsProps {

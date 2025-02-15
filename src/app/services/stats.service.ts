@@ -8,6 +8,7 @@ const STATISTICS_KEY = 'game-statistics';
 const INITIAL_VALUE: GameStatisticsProps = {
   redIsWinner: 0,
   yellowIsWinner: 0,
+  draw: 0,
 };
 
 @Injectable({
@@ -25,12 +26,22 @@ export class StatsService {
 
     this.storage.saveData(STATISTICS_KEY, JSON.stringify(updatedValue));
   }
-
+  
   public increaseYellowCounter() {
     const currentValue = this.getStatistics();
     const updatedValue: GameStatisticsProps = {
       ...currentValue,
       yellowIsWinner: (currentValue.yellowIsWinner += 1),
+    };
+
+    this.storage.saveData(STATISTICS_KEY, JSON.stringify(updatedValue));
+  }
+
+  public increaseDrawCounter() {
+    const currentValue = this.getStatistics();
+    const updatedValue: GameStatisticsProps = {
+      ...currentValue,
+      draw: (currentValue.draw += 1),
     };
 
     this.storage.saveData(STATISTICS_KEY, JSON.stringify(updatedValue));

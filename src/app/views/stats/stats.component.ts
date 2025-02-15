@@ -24,13 +24,21 @@ export class StatsComponent implements OnInit {
     const textColor = documentStyle.getPropertyValue('--text-color');
 
     this.data = {
-      labels: ['Red', 'Yellow'],
+      labels: ['Red', 'Yellow', 'Draw'],
       datasets: [
         {
-          label: 'Winnings',
-          data: [this.statsFromStorage.redIsWinner, this.statsFromStorage.yellowIsWinner],
-          backgroundColor: [documentStyle.getPropertyValue('--p-red-500'), documentStyle.getPropertyValue('--p-yellow-500')],
-          hoverBackgroundColor: [documentStyle.getPropertyValue('--p-red-400'), documentStyle.getPropertyValue('--p-yellow-400')],
+          label: 'Total',
+          data: [this.statsFromStorage.redIsWinner, this.statsFromStorage.yellowIsWinner, this.statsFromStorage.draw],
+          backgroundColor: [
+            documentStyle.getPropertyValue('--p-red-500'),
+            documentStyle.getPropertyValue('--p-yellow-500'),
+            documentStyle.getPropertyValue('--p-gray-500'),
+          ],
+          hoverBackgroundColor: [
+            documentStyle.getPropertyValue('--p-red-400'),
+            documentStyle.getPropertyValue('--p-yellow-400'),
+            documentStyle.getPropertyValue('--p-gray-400'),
+          ],
         },
       ],
     };
